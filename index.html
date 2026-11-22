@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Career Skill Gap AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f2f5f1;--card:#fff;--ink:#14302b;--mute:#5d716c;--line:#d5ded9;--acc:#0f7a63;--acc2:#e8a317;--bad:#b8412f;--ok:#0f7a63;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1a18;--card:#16262a;--ink:#e6f0ec;--mute:#93a9a3;--line:#2a403c;--acc:#3ccaa5;--acc2:#f0b43a;--bad:#ef8a76;--ok:#3ccaa5;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0e1a18;--card:#16262a;--ink:#e6f0ec;--mute:#93a9a3;--line:#2a403c;--acc:#3ccaa5;--acc2:#f0b43a;--bad:#ef8a76;--ok:#3ccaa5;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Bricolage Grotesque",system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.5}
+main{max-width:860px;margin:0 auto;padding:20px 16px 64px}
+h1{font-size:clamp(28px,6vw,44px);line-height:1.05;margin:8px 0 6px;font-weight:800;letter-spacing:-.02em}
+h2{font-size:20px;margin:0 0 10px}
+.sub{color:var(--mute);max-width:56ch;margin:0 0 22px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:16px}
+label{display:block;font-size:13px;color:var(--mute);margin:0 0 4px}
+select,input[type=text],input[type=number]{width:100%;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:inherit}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.roles{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
+.role{border:2px solid var(--line);border-radius:12px;padding:12px;cursor:pointer;background:var(--bg);text-align:left;font:inherit;color:var(--ink)}
+.role b{display:block}.role span{font-size:13px;color:var(--mute)}
+.role[aria-pressed=true]{border-color:var(--acc);background:color-mix(in srgb,var(--acc) 10%,var(--card))}
+.sk{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 0;border-top:1px solid var(--line);flex-wrap:wrap}
+.sk:first-of-type{border-top:0}
+.sk small{display:block;color:var(--mute);font-size:12.5px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.seg button{border:0;background:var(--bg);color:var(--mute);padding:7px 12px;font:inherit;font-size:13px;cursor:pointer}
+.seg button[aria-pressed=true]{background:var(--acc);color:#fff}
+.cta{background:var(--acc2);color:#1b1500;border:0;border-radius:10px;padding:13px 22px;font:inherit;font-weight:600;font-size:16px;cursor:pointer}
+button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid var(--acc2);outline-offset:2px}
+.score{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.big{font-size:64px;font-weight:800;line-height:1;color:var(--acc)}
+.bar{height:10px;border-radius:6px;background:var(--line);overflow:hidden;flex:1;min-width:160px}
+.bar i{display:block;height:100%;background:var(--acc);transition:width .4s}
+.tag{display:inline-block;font-size:12px;padding:2px 9px;border-radius:99px;border:1px solid var(--line);color:var(--mute);margin-right:6px}
+.gap{color:var(--bad)}.good{color:var(--ok)}
+.trail{position:relative;margin:6px 0 0 10px;padding-left:22px;border-left:3px solid var(--line)}
+.step{position:relative;padding:4px 0 16px}
+.step::before{content:"";position:absolute;left:-31px;top:8px;width:15px;height:15px;border-radius:50%;background:var(--card);border:3px solid var(--acc2)}
+.step.done::before{background:var(--acc);border-color:var(--acc)}
+.step.done .t{text-decoration:line-through;color:var(--mute)}
+.step label{display:flex;gap:8px;align-items:flex-start;font-size:16px;color:var(--ink);cursor:pointer}
+.step input{margin-top:6px}
+.step p{margin:2px 0 0 26px;font-size:13.5px;color:var(--mute)}
+ul{margin:6px 0 0;padding-left:20px}li{margin-bottom:5px}
+.top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+.theme{background:none;border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:6px 10px;font:inherit;cursor:pointer}
+:root{--grad:linear-gradient(135deg,#fff1f6 0%,#eef2ff 40%,#e6fffb 75%,#fffbe6 100%)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--grad:linear-gradient(135deg,#1b1038 0%,#0c2340 50%,#0b3a3a 100%)}}
+:root[data-theme="dark"]{--grad:linear-gradient(135deg,#1b1038 0%,#0c2340 50%,#0b3a3a 100%)}
+body{background:var(--grad) fixed;min-height:100vh}
+body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(520px 380px at 8% 0%,rgba(236,72,153,.2),transparent 70%),radial-gradient(520px 380px at 100% 25%,rgba(59,130,246,.2),transparent 70%),radial-gradient(520px 380px at 40% 100%,rgba(20,184,166,.2),transparent 70%)}
+h1{background:linear-gradient(90deg,#8b5cf6,#ec4899,#f97316);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.top .tag{background:linear-gradient(90deg,#8b5cf6,#ec4899);color:#fff;border:0}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 20px}
+.chips span{padding:6px 12px;border-radius:99px;font-size:13px;font-weight:600;color:#fff}
+.chips span:nth-child(1){background:#8b5cf6}.chips span:nth-child(2){background:#ec4899}.chips span:nth-child(3){background:#f97316}.chips span:nth-child(4){background:#0d9488}.chips span:nth-child(5){background:#3b82f6}
+.card{border-radius:16px;border-top:6px solid var(--ac,#8b5cf6);box-shadow:0 8px 22px rgba(139,92,246,.12)}
+.card h2{color:var(--ac,#8b5cf6)}
+section.card:nth-of-type(1){--ac:#8b5cf6}section.card:nth-of-type(2){--ac:#ec4899}section.card:nth-of-type(3){--ac:#f97316}
+#out>.card:nth-child(5n+1){--ac:#8b5cf6}#out>.card:nth-child(5n+2){--ac:#ec4899}#out>.card:nth-child(5n+3){--ac:#f97316}#out>.card:nth-child(5n+4){--ac:#14b8a6}#out>.card:nth-child(5n+5){--ac:#3b82f6}
+#out .grid .card:nth-child(1){--ac:#14b8a6}#out .grid .card:nth-child(2){--ac:#3b82f6}
+.big{background:linear-gradient(90deg,#8b5cf6,#ec4899);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.bar i{background:linear-gradient(90deg,#14b8a6,#3b82f6,#8b5cf6)}
+.cta{background:linear-gradient(90deg,#f97316,#ec4899);color:#fff;box-shadow:0 6px 16px rgba(236,72,153,.35);transition:transform .15s}.cta:hover{transform:translateY(-2px)}
+.seg button[aria-pressed=true]:nth-child(1){background:#ef4444}.seg button[aria-pressed=true]:nth-child(2){background:#d97706}.seg button[aria-pressed=true]:nth-child(3){background:#16a34a}
+.role{border-left:6px solid var(--rc,#8b5cf6);transition:transform .15s,box-shadow .15s}
+.role:hover{transform:translateY(-2px);box-shadow:0 6px 14px rgba(0,0,0,.12)}
+.role[aria-pressed=true]{border-color:var(--rc,#8b5cf6);background:color-mix(in srgb,var(--rc,#8b5cf6) 20%,var(--card))}
+.role:nth-of-type(6n+1){--rc:#8b5cf6}.role:nth-of-type(6n+2){--rc:#ec4899}.role:nth-of-type(6n+3){--rc:#f97316}.role:nth-of-type(6n+4){--rc:#14b8a6}.role:nth-of-type(6n+5){--rc:#3b82f6}.role:nth-of-type(6n+6){--rc:#eab308}
+#roles h3:nth-of-type(8n+1){color:#8b5cf6!important}#roles h3:nth-of-type(8n+2){color:#ec4899!important}#roles h3:nth-of-type(8n+3){color:#f97316!important}#roles h3:nth-of-type(8n+4){color:#14b8a6!important}#roles h3:nth-of-type(8n+5){color:#3b82f6!important}#roles h3:nth-of-type(8n+6){color:#eab308!important}#roles h3:nth-of-type(8n+7){color:#ef4444!important}#roles h3:nth-of-type(8n+8){color:#22c55e!important}
+.role .tag:first-child{background:rgba(236,72,153,.2);border-color:transparent;color:var(--ink)}.role .tag:last-child{background:rgba(59,130,246,.2);border-color:transparent;color:var(--ink)}
+.trail{border-left-color:#c4b5fd}.step::before{border-color:#f97316}.step.done::before{background:#22c55e;border-color:#22c55e}
+.gap{color:#ef4444}.good{color:#16a34a}
+#pt{color:var(--ink)}
+.hide{display:none}
+
+/* Connected Backend Badge */
+.api-pill{font-size:12px;padding:4px 10px;border-radius:99px;border:1px solid var(--line);cursor:pointer;font-weight:600;display:inline-flex;align-items:center;gap:6px}
+.api-live{background:rgba(16,185,129,.15);border-color:#10b981;color:#10b981}
+.api-off{background:rgba(245,158,11,.15);border-color:#f59e0b;color:#f59e0b}
+</style>
+</head>
+<body>
+<main>
+<div class="top">
+  <span class="tag">Career Skill Gap AI</span>
+  <div style="display:flex;align-items:center;gap:8px;">
+    <span id="apiStatus" class="api-pill api-off" title="Click to test backend connection" onclick="testBackend()">🟡 Standalone Mode</span>
+    <button class="theme" id="theme" aria-label="Toggle light or dark theme">Theme</button>
+  </div>
+</div>
+
+<h1>Your career should have a path.</h1>
+<p class="sub">Tell us where you are and where you want to go. Get your skill gaps, a week-by-week roadmap and projects. Works for every career: public and private sector, in India and abroad, across technology, business, government, law, teaching, health, design, trades and more.</p>
+
+<div class="chips"><span>85+ careers</span><span>Public and private</span><span>India and abroad</span><span>Free learning links</span><span>Live progress</span></div>
+
+<section class="card" aria-labelledby="s1">
+<h2 id="s1">1. About you</h2>
+<div class="grid">
+<div><label for="name">Name</label><input type="text" id="name" placeholder="Your name"></div>
+<div><label for="field">Your field of study</label>
+<select id="field"></select></div>
+<div><label for="year">Current year</label>
+<select id="year"><option>First year</option><option selected>Second year</option><option>Third year</option><option>Final year</option><option>Graduated</option><option>Working professional</option></select></div>
+<div><label for="hrs">Hours you can study per week</label><input type="number" id="hrs" min="2" max="60" value="10"></div>
+</div>
+</section>
+
+<section class="card" aria-labelledby="s2">
+<h2 id="s2">2. Pick your target role</h2>
+<div class="grid" style="margin-bottom:12px"><input type="text" id="q" placeholder="Search professions, e.g. nurse, pilot, chef" aria-label="Search professions"><select id="fs" aria-label="Sector"><option value="">Public and private</option><option value="P">Public sector</option><option value="V">Private sector</option></select><select id="fr" aria-label="Region"><option value="">India and abroad</option><option value="I">India</option><option value="A">Abroad</option></select></div>
+<div class="roles" id="roles"></div>
+<div id="cust" class="hide" style="margin-top:14px"><label for="ct">Your profession</label><input type="text" id="ct" placeholder="e.g. Wildlife photographer"><label for="cs" style="margin-top:10px">Key skills needed, one per line (4 to 10)</label><textarea id="cs" rows="5" style="width:100%;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:inherit"></textarea><p style="margin:10px 0 0;display:flex;gap:10px;flex-wrap:wrap"><button class="cta" id="cu">Use these skills</button><button class="cta" id="aiBtn" style="background:linear-gradient(90deg,#8b5cf6,#3b82f6);">✨ Generate with AI</button></p></div>
+</section>
+
+<section class="card hide" id="assess" aria-labelledby="s3">
+<h2 id="s3">3. Rate your current skills</h2>
+<p class="sub" style="margin-bottom:8px">Be honest. None means you haven’t started. Basic means you know the idea. Good means you can use it on your own.</p>
+<div id="skills"></div>
+<p style="margin:16px 0 0"><button class="cta" id="go">Build my roadmap</button></p>
+</section>
+
+<section id="out" class="hide" aria-live="polite"></section>
+</main>
+<script>
+var API_URL = "http://127.0.0.1:8000";
+var isApiLive = false;
+
+async function testBackend(){
+  var el = document.getElementById("apiStatus");
+  try {
+    var res = await fetch(API_URL + "/api/health", {signal: AbortSignal.timeout(2000)});
+    if(res.ok){
+      var d = await res.json();
+      isApiLive = true;
+      el.className = "api-pill api-live";
+      el.textContent = "🟢 Backend API Live (" + d.total_roles_available + "+ roles)";
+      return;
+    }
+  }catch(e){}
+  isApiLive = false;
+  el.className = "api-pill api-off";
+  el.textContent = "🟡 Standalone Mode";
+}
+
+var FIELDS={
+"Computer Science / IT":"You already have the technical base. Focus on depth, projects and interview skills.",
+"Electronics / Electrical":"Your logic and maths background transfers well. Build programming habits and show your work on GitHub.",
+"Mechanical / Civil / Other Engineering":"Your problem-solving training is an asset. Pick one language first and build a small project from your own field, such as analysing test or sensor data.",
+"Science (Physics, Chem, Bio, Maths, Stats)":"You are strong in maths and experiments. Pair that with code and data tools, and use lab or survey data in projects.",
+"Commerce / Business / Economics":"Your understanding of money, markets and decisions is rare in tech. Analyse real sales, finance or stock data as portfolio projects.",
+"Arts / Humanities / Social Science":"Your communication and research skills are valuable. Start with spreadsheets and SQL, then add Python step by step. Use survey or text data for projects.",
+"Medical / Pharmacy / Life Sciences":"Healthcare data is a growing field. Build projects on public health datasets and learn the tools gradually.",
+"Other / Self-taught":"Start from the basics in the roadmap and track each step. Consistency matters more than your starting point."};
+var R={
+dev:{n:"Software Developer",d:"Build apps, websites and systems",
+sk:[
+["Programming basics (Python, Java or JS)",10,40,"Variables, loops, functions, problem solving"],
+["Git and GitHub",6,8,"Commit, branch, pull request, a public profile"],
+["Data structures and algorithms",14,70,"Arrays, strings, hashing, trees, sorting, complexity"],
+["SQL and databases",9,25,"Joins, indexes, design of tables"],
+["Web basics (HTML, CSS, JavaScript)",10,40,"Build and host a responsive page"],
+["Backend and APIs",12,40,"REST APIs with Node, Flask or Spring"],
+["OOP and clean code",8,20,"Classes, design principles, readable code"],
+["Testing and debugging",6,15,"Unit tests, reading errors, logging"],
+["System design basics",8,25,"Scaling, caching, queues, trade-offs"],
+["Cloud and deployment",7,20,"Deploy an app, basic Docker, CI"]],
+pr:["Personal portfolio site, hosted live","Task manager app with login and a database","REST API with tests and documentation","A full-stack project that solves a problem from your own field"],
+ce:["Meta Back-End or Front-End Developer (Coursera)","freeCodeCamp Responsive Web Design / JS Algorithms","AWS Cloud Practitioner","CS50 (Harvard, free)"]},
+an:{n:"Data Analyst",d:"Turn data into decisions and dashboards",
+sk:[
+["Excel / Google Sheets",10,20,"Formulas, pivot tables, lookups"],
+["SQL",14,35,"Select, joins, group by, window functions"],
+["Statistics basics",11,30,"Mean, spread, distributions, hypothesis tests"],
+["Data cleaning",8,20,"Missing values, duplicates, formats"],
+["Python with pandas",10,40,"Load, filter, group, merge, plot"],
+["Data visualization (Power BI or Tableau)",12,30,"Charts that answer a question, interactive dashboards"],
+["Business thinking",9,15,"KPIs, funnels, asking the right question"],
+["Storytelling and communication",8,12,"Present findings to non-technical people"],
+["Documentation and Git",4,8,"Keep your work reproducible"]],
+pr:["Sales dashboard in Power BI or Tableau","SQL analysis of a public dataset, written as a case study","Cleaning and analysing a messy real dataset with pandas","Analysis from your own field, such as marks, surveys or finance"],
+ce:["Google Data Analytics Certificate","Microsoft PL-300 (Power BI)","IBM Data Analyst (Coursera)","Kaggle micro-courses (free)"]},
+ds:{n:"Data Scientist",d:"Build models that predict and explain",
+sk:[
+["Python programming",12,40,"Functions, data types, libraries, notebooks"],
+["Statistics and probability",13,45,"Distributions, inference, A/B testing"],
+["Linear algebra and calculus basics",7,25,"Vectors, matrices, gradients"],
+["SQL",9,25,"Querying and joining large tables"],
+["Data wrangling (pandas, NumPy)",10,35,"Clean and shape messy data"],
+["Machine learning algorithms",14,60,"Regression, trees, clustering, scikit-learn"],
+["Model evaluation",9,20,"Cross-validation, metrics, overfitting"],
+["Data visualization",6,15,"Matplotlib, Seaborn, clear charts"],
+["Deep learning basics",7,45,"Neural networks with PyTorch or TensorFlow"],
+["Deployment and MLOps basics",5,25,"Serve a model, track experiments"]],
+pr:["Prediction project end to end, such as house prices or churn","Kaggle competition entry with a write-up","NLP or image classifier with a simple web demo","Model built on data from your own field"],
+ce:["Machine Learning Specialization (Andrew Ng)","IBM Data Science Professional Certificate","Google Advanced Data Analytics","Kaggle Learn (free)"]}
+};
+R.dev.c=R.an.c=R.ds.c="Technology and data";
+var P=function(n,d,c,sk,pr,ce){return{n:n,d:d,c:c,sk:sk,pr:pr,ce:ce}};
+R.mkt=P("Digital Marketing Executive","Grow brands with content, ads and analytics","Business and management",[["Marketing fundamentals",10,20,"Segments, positioning, the 4 Ps"],["Content and copywriting",10,30,"Posts, emails, landing pages"],["Social media and SEO",12,35,"Organic reach, keywords, platforms"],["Paid ads (Google, Meta)",10,25,"Budgets, targeting, A/B tests"],["Analytics and reporting",10,25,"GA4, funnels, campaign reports"],["Design basics (Canva)",5,10,"Clean creatives and presentations"]],["Run a 4-week social campaign for a local business","Rank a blog for one keyword","Campaign report with results"],["Google Digital Garage","Google Ads and Analytics certificates","HubSpot Inbound Marketing"]);
+R.hrx=P("HR Executive","Hire, onboard and support people","Business and management",[["HR fundamentals and labour law basics",11,25,"Hiring cycle, payroll basics, compliance"],["Recruitment and interviewing",12,25,"Job posts, screening, structured interviews"],["Communication and empathy",10,15,"Listening, feedback, conflict handling"],["HR tools and Excel",8,20,"ATS, attendance, simple HR reports"],["Training and engagement",7,15,"Onboarding plans, surveys"]],["Write a full job description and interview plan","Design an onboarding checklist","Mock interview panel with feedback forms"],["SHRM or HRCI entry courses","LinkedIn Learning HR basics"]);
+R.sal=P("Sales and Business Development","Win customers and grow revenue","Business and management",[["Product and market knowledge",9,15,"Know customer problems and competitors"],["Prospecting and lead generation",11,20,"Cold outreach, LinkedIn, referrals"],["Pitching and negotiation",12,25,"Discovery calls, objections, closing"],["CRM and tracking",7,10,"Pipeline stages, follow-ups"],["Communication and resilience",10,15,"Clear speaking, handling rejection"]],["Role-play 10 sales calls and review them","Build a 30-lead outreach list and track replies","Create a one-page pitch for any product"],["HubSpot Sales Software","Salesforce Trailhead basics"]);
+R.fin=P("Accountant / Finance Analyst","Manage books, budgets and financial reports","Business and management",[["Accounting principles",12,40,"Ledgers, balance sheet, P&L"],["Excel and financial modelling",12,35,"Formulas, budgets, forecasts"],["Taxation and compliance basics",9,25,"GST, income tax, filing rules"],["Accounting software (Tally, QuickBooks)",9,20,"Entries, invoices, reconciliation"],["Financial statement analysis",9,25,"Ratios, cash flow, trends"],["Reporting and ethics",5,10,"Clear summaries, accuracy"]],["Maintain books for a small shop for one month","Ratio analysis of two listed companies","Build a 12-month budget model"],["Tally Prime","CA / CMA / CFA foundation levels","Excel for finance courses"]);
+R.ias=P("Civil Services (IAS / State PSC)","Serve in public administration","Government and public service",[["Polity and governance",11,80,"Constitution, institutions, schemes"],["History, geography and environment",11,120,"NCERT first, then standard books"],["Economy and current affairs",11,100,"Budget, survey, daily newspaper"],["Optional subject",10,150,"Syllabus, past papers, notes"],["Answer writing and essay",12,60,"Structure, examples, time limits"],["Mock tests and revision",10,80,"Prelims series, error log"]],["Weekly answer writing with feedback","Monthly current-affairs notes","Full prelims mock every 2 weeks"],["UPSC official syllabus and past papers","NCERT books (6–12)"]);
+R.bnk=P("Bank / SSC Exams","Clear competitive exams for banking and government jobs","Government and public service",[["Quantitative aptitude",12,60,"Arithmetic, data interpretation"],["Reasoning",12,50,"Puzzles, seating, logic"],["English language",10,40,"Grammar, reading comprehension"],["General and financial awareness",9,40,"Banking terms, current affairs"],["Speed and mock tests",11,50,"Timed tests, accuracy tracking"]],["One sectional test daily","Full mock every weekend","Error notebook"],["IBPS, SBI and SSC official notifications and past papers"]);
+R.res=P("Research Scientist","Run experiments and publish findings","Science, health and education",[["Subject depth in your discipline",12,80,"Core theory and recent papers"],["Research methods and statistics",12,40,"Design, sampling, tests"],["Lab or field techniques",10,50,"Safe, repeatable procedures"],["Scientific writing",9,25,"Papers, abstracts, citations"],["Data tools (Excel, R or Python)",8,30,"Analyse and plot your data"]],["Literature review on one topic","Small experiment with a written report","Poster or paper submission"],["NPTEL courses","GATE / NET / CSIR as relevant"]);
+R.tch=P("Teacher / Lecturer","Teach and mentor students","Science, health and education",[["Subject mastery",12,60,"Know it deeply and simply"],["Lesson planning",10,20,"Objectives, activities, assessment"],["Classroom communication",11,20,"Explaining, questioning, engagement"],["Educational technology",6,15,"Slides, quizzes, online tools"],["Eligibility exams (TET, NET, B.Ed)",10,60,"Syllabus and previous papers"]],["Record a 15-minute demo lesson","Prepare a 4-week unit plan","Tutor a small group and collect feedback"],["B.Ed","TET / CTET / NET","Teaching courses on Coursera or SWAYAM"]);
+R.des=P("Graphic / UI-UX Designer","Design visuals and digital experiences","Creative and media",[["Design principles",11,25,"Layout, colour, type, hierarchy"],["Design tools (Figma, Adobe)",12,40,"Frames, components, export"],["User research and UX basics",10,25,"Interviews, flows, wireframes"],["Prototyping",9,20,"Clickable flows and testing"],["Portfolio and storytelling",10,25,"Case studies with process"]],["Redesign a poorly designed app screen","Brand kit for a local business","Three case studies in a portfolio site"],["Google UX Design Certificate","Figma tutorials"]);
+R.wrt=P("Content Writer / Journalist","Research and write for audiences","Creative and media",[["Writing and editing",12,40,"Clarity, structure, grammar"],["Research and fact-checking",10,25,"Sources, interviews, accuracy"],["Storytelling and tone",10,25,"Hooks, angles, voice"],["SEO and digital publishing",8,20,"Headlines, keywords, CMS"],["Portfolio",10,20,"Published samples"]],["Publish 6 articles on a blog or Medium","Interview a local professional and write the story","Pitch an article to a publication"],["Poynter or Coursera journalism courses","HubSpot Content Marketing"]);
+R.law=P("Lawyer / Legal Professional","Advise, draft and argue legal matters","Law",[["Core legal subjects",12,100,"Constitutional, contract, criminal, civil law"],["Legal research",11,30,"Case law databases and statutes"],["Drafting",11,35,"Notices, contracts, petitions"],["Advocacy and moot court",10,30,"Arguments, cross-examination"],["Entrance and bar exams (CLAT, AIBE)",9,60,"Syllabus and past papers"]],["Moot court participation","Draft five different agreements","Case brief summaries every week"],["CLAT / AILET","AIBE","Internship with an advocate"]);
+R.eng=P("Core Engineer (Mech, Civil, Elec)","Design, build and maintain physical systems","Technology and data",[["Core subject fundamentals",12,80,"Mechanics, materials, circuits, structures"],["CAD and design tools",11,40,"AutoCAD, SolidWorks or similar"],["Simulation and analysis",9,30,"ANSYS, MATLAB or equivalent"],["Standards and safety",8,20,"Codes, quality, safe practice"],["Hands-on projects and internship",11,60,"Build, test, document"]],["Design and model one component or structure","Capstone with a test report","Site or plant visit report"],["GATE","NPTEL core courses","AutoCAD or SolidWorks certificate"]);
+
+var Q=function(id,n,c,s,pr,ce){R[id]={n:n,d:"",c:c,sk:s.split("|").map(function(x,i){var p=x.split(":");return[p[0],12-Math.min(i,4),+p[2]||30,p[1]||""]}),pr:pr.split("|"),ce:ce.split("|")}};
+var H="Healthcare",T="Technology and data",B="Business and management",G="Government and public service",C="Creative and media",S="Trades, hospitality and services",E="Science, health and education";
+Q("doc","Doctor (MBBS)",H,"Pre-clinical subjects:Anatomy, physiology, biochemistry:90|Clinical subjects:Medicine, surgery, paediatrics, OB-GYN:120|Clinical skills and patient care:History, examination, procedures:60|Entrance and PG exams:NEET UG, then NEET PG:100|Communication and ethics:Consent, breaking news, empathy:20","Shadow doctors in a hospital|Write up one case every week|Daily timed mock tests","NEET UG|NEET PG|NMC guidelines");
+Q("nur","Nurse",H,"Nursing fundamentals:Vitals, hygiene, medication safety:60|Clinical practice:Ward rotations, wound care, emergencies:80|Anatomy and pharmacology:Core science for care:50|Patient communication:Empathy, documentation, handover:20|Licensing exams:State nursing council, NCLEX or similar:60","Practise skills in a simulation lab|Care plan for one patient case|Mock licensing test","B.Sc Nursing or GNM|State nursing council registration|NCLEX-RN");
+Q("pha","Pharmacist",H,"Pharmacology:Drug action, dosage, interactions:70|Dispensing and prescriptions:Reading, checking, labelling:30|Pharmaceutics and chemistry:Formulations and quality:60|Regulation and ethics:Drug laws, records:25|Patient counselling:Explain medicines clearly:20","Mock dispensing practice|Medicine information leaflet for patients|Internship at a pharmacy","D.Pharm or B.Pharm|State pharmacy council registration|GPAT");
+Q("phy","Physiotherapist",H,"Anatomy and biomechanics:Muscles, joints, movement:60|Assessment skills:Posture, range, strength testing:40|Treatment techniques:Exercise therapy, manual therapy:60|Rehabilitation planning:Goals, progress tracking:30|Patient motivation:Communication and follow-up:15","Design a 6-week rehab plan for a sample case|Clinical internship log|Community posture camp","BPT|State council registration|Sports physiotherapy courses");
+Q("psy","Psychologist / Counsellor",H,"Psychology theory:Development, cognition, abnormal psychology:80|Counselling skills:Active listening, rapport, boundaries:40|Assessment and testing:Standard tools and ethics:40|Research and statistics:Studies and reading data:35|Supervised practice:Internship with a licensed professional:80","Role-play counselling sessions with feedback|Small survey study|Supervised internship","BA/MA Psychology|M.Phil Clinical Psychology (RCI)|Counselling certificates");
+Q("vet","Veterinarian",H,"Animal anatomy and physiology:All major species:90|Veterinary medicine and surgery:Diagnosis and treatment:100|Animal husbandry:Nutrition, breeding, welfare:40|Entrance exams:NEET or state tests, then licensing:80|Client communication:Owners and farmers:15","Volunteer at an animal clinic|Case notes on common diseases|Vaccination awareness drive","BVSc and AH|Veterinary Council registration");
+Q("cyb","Cybersecurity Analyst",T,"Networking basics:TCP/IP, DNS, firewalls:40|Operating systems:Linux and Windows internals:40|Security fundamentals:Threats, encryption, access control:40|Ethical hacking and tools:Nmap, Wireshark, Burp:50|Incident response and logs:Detect and report issues:30","Set up a home lab and scan it|Write a vulnerability report for a practice site|Capture-the-flag challenges","CompTIA Security+|CEH|Google Cybersecurity Certificate");
+Q("cld","Cloud / DevOps Engineer",T,"Linux and scripting:Shell, Python basics:40|Cloud platforms:AWS, Azure or GCP core services:50|Containers and Kubernetes:Docker, orchestration:40|CI/CD and Git:Automated build and deploy:30|Monitoring and infrastructure as code:Terraform, logs, alerts:35","Deploy a web app on the cloud with CI/CD|Dockerise an existing project|Infrastructure as code for a small stack","AWS Solutions Architect Associate|Azure Fundamentals|CKA");
+Q("aim","AI / ML Engineer",T,"Python and maths:Linear algebra, probability, code:60|Machine learning:Models, training, evaluation:60|Deep learning:PyTorch or TensorFlow:50|Data pipelines:Clean, store, serve data:35|Deploying models:APIs, monitoring:30","Image or text classifier with a web demo|Reproduce a published paper|Deploy a model behind an API","Deep Learning Specialization|Google ML Engineer|Hugging Face courses");
+Q("mob","Mobile App Developer",T,"Programming language:Kotlin, Swift or Dart:50|UI and layouts:Screens, navigation, design guidelines:35|Data and APIs:Networking, local storage:35|Publishing:Store listing and testing:15|Version control:Git workflows:10","Habit tracker app|App using a public API|Publish one app to a store","Meta Android Developer|Flutter tutorials|Apple Developer tutorials");
+Q("gam","Game Developer",T,"Programming:C# or C++:50|Game engine (Unity or Unreal):Scenes, physics, UI:50|Game design:Loops, balance, feedback:30|Maths and physics for games:Vectors, collisions:30|Art and sound basics:Assets and tools:20","2D platformer|Small multiplayer prototype|Game jam entry","Unity Learn|Unreal Online Learning|GDC talks");
+Q("qat","QA / Test Engineer",T,"Testing fundamentals:Test cases, bugs, severity:25|Manual and exploratory testing:Find real defects:30|Test automation:Selenium or Playwright:45|API testing:Postman, REST:25|Agile and tools:Jira, reporting:15","Write a full test plan for a public website|Automate five user flows|Bug report portfolio","ISTQB Foundation|Selenium courses");
+Q("pdm","Product Manager",T,"User research:Interviews, problems, personas:30|Product strategy:Roadmaps, priorities, metrics:35|Working with teams:Requirements, stand-ups:20|Data and experiments:Funnels, A/B tests:30|Communication:Specs and stakeholder updates:20","Write a product spec for an app you use|Teardown of a popular product|Prioritise a backlog using a framework","Product School|Google or Reforge PM courses");
+Q("net","Network / Embedded Engineer",T,"Electronics and circuits:Analog and digital:60|Embedded C and microcontrollers:Arduino, STM32:50|Protocols:I2C, SPI, TCP/IP:35|Debugging with instruments:Scope, logic analyser:25|Networking:Routing, switching:40","Sensor data logger|Home automation with microcontrollers|Network lab with routing","Cisco CCNA|Embedded systems courses");
+Q("ops","Operations / Supply Chain Manager",B,"Process management:Workflows, bottlenecks:30|Inventory and procurement:Stock, suppliers, costs:35|Logistics and planning:Transport, scheduling:30|Data and Excel:Reports and forecasts:25|Leadership:Coordinate teams:20","Map and improve one process|Inventory plan with Excel|Case study of a supply chain failure","APICS CSCP|Six Sigma Green Belt|Supply chain courses");
+Q("ent","Entrepreneur / Startup Founder",B,"Problem and customer discovery:Talk to 20 users:30|Business model and finance:Costs, pricing, runway:35|Building the first product:Minimum version:50|Marketing and sales:First 10 customers:35|Resilience and networking:Mentors, peers:15","Launch a minimum product in 6 weeks|Business plan with numbers|Pitch to a mentor panel","Startup India resources|NPTEL entrepreneurship|Incubator programmes");
+Q("pjm","Project Manager",B,"Planning and scheduling:Scope, timeline, budget:30|Risk and quality:Plans for what can go wrong:25|Tools:Jira, MS Project, Excel:20|Stakeholder communication:Updates, meetings:20|Agile and Scrum:Sprints, retros:20","Plan a real event or project end to end|Project charter and risk log|Run a sprint with a small team","PMP or CAPM|Scrum Master|Google Project Management Certificate");
+Q("con","Management Consultant",B,"Structured problem solving:Issue trees, hypotheses:40|Case interviews:Market sizing, profitability:50|Excel and presentations:Models and slides:35|Industry knowledge:Read business news:30|Communication:Crisp, confident:20","Practise 30 cases with a partner|Slide deck on a company problem|Market-sizing practice daily","Case in Point book|Consulting club prep|CAT or GMAT for MBA");
+Q("inb","Investment / Equity Analyst",B,"Financial statements:Read and analyse:40|Valuation:DCF, multiples:45|Markets and economics:Rates, sectors, news:30|Excel modelling:Build models from scratch:40|Reports and ethics:Clear write-ups:20","Valuation report on one listed company|Build a DCF model|Weekly market note","CFA Level 1|NISM certifications|Financial modelling courses");
+Q("cus","Customer Support / Service",B,"Product knowledge:Know the product well:20|Communication:Clear, calm writing and speaking:25|Problem solving:Find root causes:20|Support tools:Ticketing, chat, CRM:15|Handling difficult customers:De-escalation:15","Write 20 help-centre replies|Role-play angry customer calls|Build a FAQ","Customer service courses|HubSpot Service Software");
+Q("cs","Company Secretary",B,"Company law:Companies Act, governance:70|Corporate compliance:Filings, meetings, records:50|Securities law:SEBI rules:40|Drafting:Minutes, resolutions:30|Exam preparation:CSEET, Executive, Professional:100","Draft board resolutions and minutes|Compliance calendar for a company","CSEET|ICSI CS course");
+Q("evt","Event Manager",B,"Planning and budgeting:Timeline, costs:30|Vendor and venue management:Negotiation, contracts:25|On-site coordination:Run the day smoothly:30|Marketing and promotion:Ticketing, social media:20|Teamwork and stress handling:Volunteers, backup plans:15","Organise a college fest segment|Budget and run-of-show for a mock event","Event management diplomas|Internship with an agency");
+Q("def","Defence Officer (NDA / CDS / AFCAT)",G,"Written exam subjects:Maths, English, GK, reasoning:100|SSB interview preparation:Psychology tests, GD, interview:60|Physical fitness:Running, strength, endurance:80|Leadership and teamwork:Initiative and responsibility:30|Current affairs and awareness:Defence and world news:40","Daily fitness log|Weekly mock SSB tasks|Timed written mock tests","NDA|CDS|AFCAT official notifications");
+Q("pol","Police Officer",G,"General knowledge and law basics:IPC or BNS, CrPC or BNSS:70|Reasoning and aptitude:Written test:50|Physical standards:Running, jumps, strength:80|Interview and communication:Clear and confident:30|Integrity and awareness:Ethics, current affairs:30","Physical training schedule|Mock written tests|Interview practice","State police recruitment notifications|UPSC CAPF");
+Q("rly","Railway / PSU Jobs",G,"Maths and reasoning:RRB and PSU exams:80|General science and awareness:Basics:50|Technical subject (for engineers):GATE-style revision:100|Speed and accuracy:Mocks:50|Document and interview prep:Final stage:20","Previous-year paper practice|Weekly full mocks","RRB NTPC / JE|GATE for PSUs");
+Q("arc","Architect",C,"Design and drawing:Sketching, plans, elevations:60|CAD and 3D tools:AutoCAD, Revit, SketchUp:60|Structures and materials:How buildings stand:50|Building codes and sustainability:Rules and green design:30|Portfolio and presentation:Studio work:40","Design a small house with full drawings|Site analysis and model|Portfolio of 4 projects","NATA|Council of Architecture registration");
+Q("int","Interior Designer",C,"Space planning:Layouts and flow:35|Colour, materials, lighting:Mood and function:30|Design software:SketchUp, AutoCAD, Photoshop:50|Client briefing and budgeting:Needs and cost control:25|Portfolio:Before and after projects:30","Redesign a room with mood board and layout|3D render of a living space","Interior design diploma|SketchUp and V-Ray courses");
+Q("fas","Fashion Designer",C,"Sketching and design:Illustration, silhouettes:40|Fabric and garment construction:Pattern making, sewing:60|Trends and branding:Research and collections:30|Design software:Illustrator, CLO3D:30|Portfolio and styling:Mini collection:40","Design and make a 5-piece mini collection|Trend board for one season","NIFT / NID entrance|Fashion design diplomas");
+Q("pho","Photographer / Video Editor",C,"Camera and lighting:Exposure, composition:40|Editing software:Lightroom, Premiere, DaVinci:50|Storytelling:Shots and sequence:30|Client work and business:Pricing, contracts:20|Portfolio and social presence:Show your best 12:25","Photo series or short film|Edit a 2-minute story video|Shoot for a local business","Adobe Certified Professional|Film school short courses");
+Q("ani","Animator / VFX Artist",C,"Drawing and animation principles:Timing, weight, spacing:60|Software (Blender, Maya, After Effects):Core tools:60|Storyboarding and storytelling:Plan scenes:30|Modelling or compositing:Depending on path:50|Showreel:60-second best work:40","30-second animated short|Character walk cycle|VFX shot breakdown","Animation school courses|Blender Foundation tutorials");
+Q("chf","Chef / Culinary Professional",S,"Cooking techniques:Knife skills, heat, sauces:80|Food safety and hygiene:HACCP basics:25|Menu planning and costing:Portions, margins:30|Kitchen operations:Station work, speed:60|Creativity and presentation:Plating, flavours:30","Plan a 3-course menu with costing|Cook for 20 people|Kitchen internship","Culinary diploma or hotel management|FSSAI food safety certificate");
+Q("hot","Hotel / Hospitality Manager",S,"Front office and guest service:Check-in, complaints:40|Food and beverage service:Restaurant operations:40|Housekeeping and facilities:Standards:30|Revenue and cost control:Rates and occupancy:30|Communication and grooming:Professional presence:20","Hotel internship rotation|Guest-handling role-plays|Revenue report for a sample hotel","BHM / IHM entrance (NCHMCT JEE)|Hospitality diplomas");
+Q("pil","Pilot / Aviation Professional",S,"Ground school theory:Aerodynamics, navigation, meteorology:150|Flight hours:Training and simulation:200|Regulations and safety:DGCA rules:40|Medical fitness:Class 1 medical:10|English and communication:Radio telephony:30","Simulator practice|Weekly theory tests","DGCA CPL|Class 1 medical|Flying school entrance");
+Q("elt","Electrician / Technician",S,"Electrical basics:Circuits, wiring, safety:50|Tools and installation:Panels, motors, appliances:60|Troubleshooting:Find and fix faults:40|Codes and safety:Earthing, standards:25|Customer handling:Quotes and trust:15","Wire a practice board|Repair five faulty appliances","ITI Electrician|NSDC skill certification|Wireman licence");
+Q("agr","Agriculture / Agri-entrepreneur",S,"Crop science:Soil, water, nutrition:60|Modern farming methods:Drip, protected cultivation:40|Marketing and pricing:Mandi, direct sales:30|Farm business and finance:Schemes, loans:30|Agri-tech tools:Sensors, drones, apps:20","Plan one crop cycle with a budget|Farm visit report","B.Sc Agriculture|ICAR AIEEA|Krishi Vigyan Kendra training");
+Q("fit","Fitness Coach / Sports Professional",S,"Exercise science:Muscles, energy, recovery:50|Programming:Training plans for goals:40|Nutrition basics:Food and performance:30|Coaching and motivation:Teach form, keep clients:25|Business and safety:Injury prevention, first aid:20","Create 8-week plans for three clients|Coach a small group","ACE or NASM|First aid and CPR|NIS Patiala courses");
+Q("swk","Social Worker / NGO Professional",E,"Social issues and policy:Poverty, health, rights:50|Fieldwork and community engagement:Surveys, outreach:60|Programme planning and funding:Budgets, proposals:40|Counselling and communication:Listen, support:30|Monitoring and reporting:Impact measurement:30","Community survey and report|Write a grant proposal|NGO internship","MSW|TISS entrance|NGO fellowship programmes");
+Q("eco","Economist / Policy Analyst",E,"Micro and macro economics:Theory and policy:80|Statistics and econometrics:Regression, causality:60|Data tools:Excel, R or Stata:40|Policy reading and writing:Briefs, reports:40|Current economy tracking:Budget, RBI, trade data:30","Policy brief on a current issue|Analyse a public economic dataset","Economics MA entrance (DSE, JNU)|Indian Economic Service (UPSC)");
+Q("env","Environmental Scientist",E,"Ecology and environmental science:Systems, pollution, climate:70|Field and lab methods:Sampling, testing:50|GIS and data analysis:QGIS, Excel, R:50|Environmental law and impact assessment:EIA, regulations:40|Reports and communication:Findings for decision makers:30","Local water or air quality study|GIS map of a local issue","M.Sc Environmental Science|Indian Forest Service (UPSC)|GIS certificates");
+R.custom={n:"My profession isn’t listed",d:"Build your own skill list",c:"Not listed?",sk:[],pr:[],ce:[]};
+var cf=0;
+var BK={dev:"Cracking the Coding Interview|Clean Code|The Pragmatic Programmer",an:"Storytelling with Data|Naked Statistics",ds:"Hands-On Machine Learning with Scikit-Learn, Keras and TensorFlow|Python for Data Analysis",mkt:"This Is Marketing|Building a StoryBrand",hrx:"First, Break All the Rules|Work Rules!",sal:"SPIN Selling|To Sell Is Human",fin:"Financial Intelligence|Financial Shenanigans",ias:"Indian Polity by M. Laxmikanth|India’s Struggle for Independence by Bipan Chandra|Indian Economy by Ramesh Singh",bnk:"Quantitative Aptitude by R.S. Aggarwal|A Modern Approach to Verbal and Non-Verbal Reasoning",res:"The Craft of Research|How to Write a Lot",tch:"Make It Stick|Teach Like a Champion",des:"The Design of Everyday Things|Don’t Make Me Think",wrt:"On Writing Well|Everybody Writes",law:"Constitutional Law of India by J.N. Pandey|Law of Contract by Avtar Singh",eng:"Advanced Engineering Mathematics by Erwin Kreyszig|Shigley’s Mechanical Engineering Design",doc:"Harrison’s Principles of Internal Medicine|Gray’s Anatomy for Students",nur:"Fundamentals of Nursing by Potter and Perry|Brunner and Suddarth’s Medical-Surgical Nursing",pha:"Rang and Dale’s Pharmacology|Goodman and Gilman’s Pharmacological Basis of Therapeutics",phy:"Therapeutic Exercise by Kisner and Colby|Kinesiology of the Musculoskeletal System",psy:"Psychology by David Myers|Man’s Search for Meaning",vet:"Merck Veterinary Manual|Textbook of Veterinary Anatomy by Dyce",cyb:"The Web Application Hacker’s Handbook|Hacking: The Art of Exploitation",cld:"The Phoenix Project|Site Reliability Engineering",aim:"Deep Learning by Ian Goodfellow|Hands-On Machine Learning with Scikit-Learn, Keras and TensorFlow",mob:"Head First Android Development|Flutter in Action",gam:"The Art of Game Design by Jesse Schell|Game Programming Patterns",qat:"Lessons Learned in Software Testing|Agile Testing",pdm:"Inspired by Marty Cagan|Cracking the PM Interview",net:"Computer Networking: A Top-Down Approach|The Art of Electronics",ops:"The Goal by Eliyahu Goldratt|Operations Management by Heizer and Render",ent:"The Lean Startup|Zero to One",pjm:"PMBOK Guide|Scrum by Jeff Sutherland",con:"Case in Point|The McKinsey Way",inb:"The Intelligent Investor|Investment Valuation by Aswath Damodaran",cus:"Delivering Happiness|The Effortless Experience",cs:"Company Law by Avtar Singh",evt:"Special Events by Joe Goldblatt|Event Planning by Judy Allen",def:"Lucent’s General Knowledge|NDA/NA Exam Guide (Arihant)",pol:"Lucent’s General Knowledge|Quantitative Aptitude by R.S. Aggarwal",rly:"Lucent’s General Knowledge|Quantitative Aptitude by R.S. Aggarwal",arc:"Architecture: Form, Space, and Order by Francis D.K. Ching|A Pattern Language",int:"Interior Design Illustrated by Francis D.K. Ching",fas:"Fashion Design Course by Steven Faerm|Fashion Sketchbook by Bina Abling",pho:"Understanding Exposure by Bryan Peterson|In the Blink of an Eye by Walter Murch",ani:"The Animator’s Survival Kit by Richard Williams",chf:"On Cooking by Labensky|The Professional Chef",hot:"Introduction to Hospitality by John R. Walker",pil:"Pilot’s Handbook of Aeronautical Knowledge|Stick and Rudder",elt:"A Textbook of Electrical Technology by B.L. Theraja",agr:"Principles of Agronomy by S.R. Reddy",fit:"Essentials of Strength Training and Conditioning|Becoming a Supple Leopard",swk:"Development as Freedom by Amartya Sen|Poor Economics",eco:"Principles of Economics by N. Gregory Mankiw|Poor Economics",env:"Environmental Science by Botkin and Keller|Silent Spring by Rachel Carson"};
+var enc=encodeURIComponent;
+var lk=function(u,t){return'<a href="'+u+'" target="_blank" rel="noopener noreferrer" style="color:var(--acc)">'+t+'</a>'};
+var NEED={dev:"Entry: any degree plus proven coding skills|Tools: laptop, VS Code, Git and a GitHub account|Also: internet and a portfolio of 3 projects",an:"Entry: any degree with maths or business sense|Tools: Excel, an SQL database, Power BI or Tableau (free versions), Python|Also: portfolio of 3 case studies",ds:"Entry: degree in maths, stats or CS helps, strong self-study also works|Tools: laptop with 8 GB RAM, Python, Jupyter, free Kaggle or Colab account|Also: GitHub with 3 projects",mkt:"Entry: any degree|Tools: Canva, Google Analytics, a practice social media account|Also: portfolio of campaigns",hrx:"Entry: any degree, MBA in HR helps|Tools: Excel, a job portal account, an applicant tracking tool demo|Also: knowledge of labour laws",sal:"Entry: any degree|Tools: LinkedIn profile, phone, CRM basics|Also: strong communication and a product to practise pitching",fin:"Entry: B.Com or related, CA or CMA for senior roles|Tools: Excel, Tally or QuickBooks|Also: GST and income tax knowledge",ias:"Entry: a degree from a recognised university, with age and attempt limits|Tools: NCERT books, a daily newspaper, a test series|Also: check the current UPSC notification for eligibility",bnk:"Entry: graduation, check each exam notice|Tools: mock-test platform, previous year papers|Also: age limit and category rules in the official notice",res:"Entry: master's degree, often PhD|Tools: journal access, a reference manager such as Zotero, lab or data tools|Also: a supervisor and a research proposal",tch:"Entry: degree plus B.Ed and TET or NET as required|Tools: slides, whiteboard or tablet, quiz tools|Also: a recorded demo lesson",des:"Entry: any background, a design degree helps|Tools: Figma (free plan), Adobe or Canva, a laptop|Also: portfolio website",wrt:"Entry: any degree|Tools: laptop, Google Docs, a blog or portfolio|Also: published writing samples",law:"Entry: LL.B (3 or 5 years) and Bar Council enrolment|Tools: Indian Kanoon, India Code, law reports|Also: internships with advocates",eng:"Entry: B.E. or B.Tech in the branch, GATE for higher studies|Tools: CAD and simulation software with student licences|Also: internships and safety gear for site work",doc:"Entry: MBBS through NEET UG, then NEET PG to specialise|Tools: stethoscope, textbooks, anatomy resources|Also: registration with the National Medical Commission",nur:"Entry: B.Sc Nursing or GNM|Tools: uniform, stethoscope, BP apparatus|Also: state nursing council registration",pha:"Entry: D.Pharm or B.Pharm|Tools: reference books, lab coat|Also: pharmacy council registration",phy:"Entry: BPT degree|Tools: goniometer and exercise equipment for practice|Also: council registration where required",psy:"Entry: BA or MA in Psychology, M.Phil for clinical work|Tools: standard test manuals, a private space for practice|Also: supervised hours and RCI registration for clinical roles",vet:"Entry: BVSc and AH through an entrance exam|Tools: clinical kit, textbooks|Also: Veterinary Council registration",cyb:"Entry: IT or CS degree, or any degree with strong IT skills|Tools: laptop, VirtualBox, Kali Linux, Wireshark|Also: practise only on systems you own or are allowed to test",cld:"Entry: CS or IT degree, or equivalent skills|Tools: free tiers of AWS, Azure or GCP, Docker, Linux|Also: cloud signup may need a card, so set billing alerts",aim:"Entry: degree in CS, maths or stats helps|Tools: Python, Jupyter or Colab, free GPU on Colab or Kaggle|Also: GitHub projects",mob:"Entry: any degree plus coding skills|Tools: Android Studio or Xcode (a Mac for iOS), a phone for testing|Also: a developer account to publish, store fees apply",gam:"Entry: any degree, the portfolio matters most|Tools: Unity or Unreal (free for learning), Blender|Also: game jam entries",qat:"Entry: any degree, basic coding helps|Tools: Postman, Selenium or Playwright, Jira|Also: sample bug reports",pdm:"Entry: any degree, MBA or tech experience helps|Tools: Figma, Jira, Notion, an analytics tool|Also: product teardown samples",net:"Entry: B.E. or B.Tech in ECE or CS, or a diploma|Tools: Arduino or STM32 board, multimeter, Cisco Packet Tracer (free)|Also: lab projects",ops:"Entry: any degree, MBA in operations helps|Tools: Excel, ERP basics|Also: internship in logistics or manufacturing",ent:"Entry: no fixed degree|Tools: a business idea, basic accounts, a bank account, registrations such as GST or Udyam|Also: savings or a funding plan, and mentors",pjm:"Entry: any degree plus work experience|Tools: Jira, Trello, MS Project, Excel|Also: PMP has experience-hour requirements",con:"Entry: a strong degree or MBA is typical|Tools: Excel, PowerPoint|Also: a case practice partner",inb:"Entry: B.Com, BBA, MBA or CFA|Tools: Excel, market data sites, annual reports|Also: NISM certification for some roles",cus:"Entry: 12th pass or degree|Tools: headset, ticketing or chat tool, good typing speed|Also: language skills",cs:"Entry: CSEET, then the ICSI course|Tools: Companies Act text, MCA portal access|Also: ICSI registration",evt:"Entry: any degree or diploma|Tools: planning sheets, vendor contacts, a phone|Also: first-aid awareness",def:"Entry: 12th pass for NDA, graduation for CDS and AFCAT, with age and medical standards|Tools: running shoes, mock tests|Also: check each official notification",pol:"Entry: 12th or graduation depending on the post, with age, physical and medical standards|Tools: running shoes, study material|Also: state police recruitment notices",rly:"Entry: 10th, 12th, diploma or degree depending on the post|Tools: mock tests, previous papers|Also: check the RRB or PSU notice",arc:"Entry: B.Arch through NATA or JEE Paper 2|Tools: AutoCAD, Revit, SketchUp, a drawing kit|Also: Council of Architecture registration",int:"Entry: diploma or degree in interior design|Tools: SketchUp, AutoCAD, Photoshop, measuring tools|Also: portfolio and sample boards",fas:"Entry: degree or diploma in fashion design|Tools: sewing machine, sketchbook, Illustrator|Also: a mini collection for the portfolio",pho:"Entry: no fixed degree|Tools: camera, lenses, editing software, a computer|Also: portfolio and social presence",ani:"Entry: degree or diploma, portfolio-led|Tools: Blender (free), Maya or After Effects, a drawing tablet|Also: a showreel",chf:"Entry: diploma or degree in culinary arts or hotel management|Tools: knife set, chef whites, kitchen access|Also: food safety certificate",hot:"Entry: BHM or a diploma|Tools: uniform and grooming|Also: hotel internships and language skills",pil:"Entry: 12th with physics and maths, and a DGCA Class 1 medical|Tools: headset, flight simulator software for practice|Also: training fees are high, so plan the funding",elt:"Entry: ITI or diploma|Tools: multimeter, tester, wire cutters, safety gear|Also: licence as required by the state",agr:"Entry: B.Sc Agriculture or practical experience|Tools: soil testing kit, farm tools or access to land|Also: government scheme registrations",fit:"Entry: certification or a sports science degree|Tools: basic equipment and a gym or open space|Also: first-aid and CPR certificate",swk:"Entry: BSW or MSW|Tools: survey tools, MS Office|Also: field placements and NGO volunteering",eco:"Entry: BA or B.Sc Economics, then MA|Tools: Excel, R or Stata, public datasets|Also: policy writing samples",env:"Entry: B.Sc or M.Sc in environmental science, ecology or related|Tools: QGIS (free), a field sampling kit|Also: field experience"};
+var FREE={all:[["Khan Academy","https://www.khanacademy.org","free lessons in maths, science, economics and more"],["NPTEL","https://nptel.ac.in","free IIT and IISc course videos"],["SWAYAM","https://swayam.gov.in","free Government of India courses"],["MIT OpenCourseWare","https://ocw.mit.edu","free university course material"],["Coursera","https://www.coursera.org","most courses can be audited for free"],["Alison","https://alison.com","free short courses with certificates"]],
+"Technology and data":[["freeCodeCamp","https://www.freecodecamp.org","web, data and Python curriculum"],["The Odin Project","https://www.theodinproject.com","full web development path"],["CS50","https://cs50.harvard.edu/x","Harvard’s intro to computer science"],["Kaggle Learn","https://www.kaggle.com/learn","short data and ML courses"],["roadmap.sh","https://roadmap.sh","step-by-step role roadmaps"],["W3Schools","https://www.w3schools.com","quick web and SQL references"]],
+"Business and management":[["HubSpot Academy","https://academy.hubspot.com","marketing, sales and service courses"],["Google Skillshop","https://skillshop.withgoogle.com","Google Ads and Analytics training"]],
+"Government and public service":[["NCERT textbooks","https://ncert.nic.in/textbook.php","free school books, the base for most exams"],["PIB","https://pib.gov.in","official government press releases for current affairs"],["UPSC","https://upsc.gov.in","official notices and past papers"]],
+"Healthcare":[["OpenWHO","https://openwho.org","free health courses from WHO"],["MedlinePlus","https://medlineplus.gov","reliable health information"],["Khan Academy Health","https://www.khanacademy.org/science/health-and-medicine","medicine and physiology basics"]],
+"Creative and media":[["Canva Design School","https://www.canva.com/learn/design/","design basics"],["Blender tutorials","https://www.blender.org/support/tutorials/","3D and animation"],["Figma Help","https://help.figma.com","UI design tool guides"],["Google Fonts Knowledge","https://fonts.google.com/knowledge","typography lessons"],["DaVinci Resolve training","https://www.blackmagicdesign.com/products/davinciresolve/training","free video editing training"]],
+"Law":[["India Code","https://www.indiacode.nic.in","all central laws, free"],["Indian Kanoon","https://indiankanoon.org","free case law search"],["Supreme Court of India","https://www.sci.gov.in","judgments and notices"]],
+"Trades, hospitality and services":[["Skill India Digital","https://skillindiadigital.gov.in","free skill courses"],["NSDC","https://www.nsdcindia.org","skill training and certification"]],
+"Science, health and education":[["DIKSHA","https://diksha.gov.in","free teaching resources"],["NCERT textbooks","https://ncert.nic.in/textbook.php","free school books"],["OpenLearn","https://www.open.edu/openlearn/","free courses from the Open University"]]};
+var TAG={ias:"PI",bnk:"PVI",def:"PI",pol:"PI",rly:"PI"};
+var Q2=function(id,n,c,t,s,pr,ce,nd){Q(id,n,c,s,pr,ce);NEED[id]=nd;TAG[id]=t};
+Q2("ifs","Diplomat (Indian Foreign Service)",G,"PIA","International relations and history|Polity, economy and current affairs|A foreign language|Answer writing and interview","Weekly current-affairs notes|Mock interview with a panel","UPSC Civil Services Exam (IFS is chosen as a service)|Foreign language courses","Entry: a degree plus the UPSC Civil Services Exam, with age and attempt limits|Tools: NCERT and standard books, a test series|Also: check the current UPSC notification");
+Q2("jud","Judge (Judicial Services)",G,"PI","Core laws (civil, criminal, evidence, contract)|Judgment writing|State judicial exam syllabus|Ethics and temperament","Draft practice judgments|Timed mock papers","State Judicial Services Exam|Judicial academy resources","Entry: LL.B and enrolment as the state notice requires|Tools: bare acts, law reports, past papers|Also: age and experience rules differ by state");
+Q2("ifo","Forest Officer",G,"PI","Ecology and forestry|Forest and wildlife law|Fitness and field skills|Exam preparation (UPSC IFoS or state)","Field visit report|Weekly fitness log","UPSC Indian Forest Service Exam|State forest service exams","Entry: degree in science, agriculture, forestry or engineering for IFoS|Tools: maps, field kit, fitness training|Also: check UPSC and state forest notices");
+Q2("tax","Income Tax / Revenue Officer",G,"PI","Tax law and accounts basics|Quantitative aptitude and reasoning|English and general awareness|Exam practice (SSC CGL or UPSC)","Daily timed mocks|Notes on tax rules","SSC CGL|UPSC Civil Services (IRS)","Entry: graduation for SSC CGL, or UPSC for IRS|Tools: mock tests, past papers|Also: SSC and UPSC notices");
+Q2("isr","Scientist (ISRO / DRDO / PSU labs)",G,"PI","Core engineering or science subject|Maths and problem solving|Research projects|Entrance exams (ICRB, GATE, CEPTAM)","A research or design project|GATE mock tests","GATE|ISRO and DRDO official recruitment pages","Entry: B.E., B.Tech or M.Sc as per the notice|Tools: project work, GATE preparation|Also: read each official recruitment notice");
+Q2("jea","Government Engineer (JE / AE)",G,"PI","Core branch subjects|Maths and reasoning|Drawings and codes|Exam practice (SSC JE, state PSC, GATE)","Previous-year papers|One design project","SSC JE|State PSC engineering exams","Entry: diploma or B.E./B.Tech depending on the post|Tools: CAD software, past papers|Also: official notices");
+Q2("grc","State Government Clerk / Group C",G,"PI","Quantitative aptitude and reasoning|English and the regional language|General awareness|Typing and computer skills","Daily typing practice|Weekly mocks","State Staff Selection exams|SSC CHSL","Entry: 10th, 12th or graduation depending on the post|Tools: typing practice, mock tests|Also: state notifications");
+Q2("atc","Air Traffic Controller",G,"PIA","Maths and physics|English communication|Aviation basics|Recruitment exam and training","Radio phraseology practice|Mock tests","AAI recruitment exam|Aviation basics courses","Entry: B.Sc with physics and maths, or B.E./B.Tech, for AAI|Tools: mock tests|Also: medical fitness and training");
+Q2("ca","Chartered Accountant (CA)",B,"PVIA","Accounting and auditing|Taxation and law|Financial reporting and costing|ICAI exams and articleship","Complete full mock papers|Audit a small firm’s books during articleship","ICAI Foundation, Intermediate and Final|ICAI study material","Entry: ICAI Foundation, Intermediate, Final and articleship|Tools: Excel, Tally, ICAI material|Also: ICAI membership");
+Q2("act","Actuary",B,"PVIA","Probability and statistics|Financial maths|Insurance and risk|Actuarial exams","Pricing model in Excel|Mortality table analysis","Institute and Faculty of Actuaries or IAI exams|Actuarial science courses","Entry: strong maths, then actuarial exams|Tools: Excel, R or Python|Also: professional body membership");
+Q2("den","Data Engineer",T,"PVIA","SQL and Python|Data pipelines (Airflow, Spark)|Cloud data tools|Data modelling","Build an ETL pipeline|Data warehouse on a free cloud tier","Google Cloud or AWS data certificates|Data Engineering Zoomcamp (free)","Entry: CS or IT degree or equivalent skills|Tools: free cloud tiers, Docker, Spark|Also: GitHub projects");
+Q2("bsa","Business Analyst (IT / Consulting)",B,"PVIA","Requirements gathering|SQL and Excel|Process modelling|Documentation and communication","Write a requirements document|Map a business process","IIBA ECBA|Business analysis courses","Entry: any degree, domain knowledge helps|Tools: Excel, SQL, Visio or Lucidchart, Jira|Also: sample documents");
+Q2("erp","ERP / SAP Consultant",T,"PVIA","Business processes (finance, supply chain)|SAP or Oracle modules|Configuration and testing|Client communication","Configure a sample process|Document a support case","SAP Learning Hub free tier|SAP or Oracle certifications","Entry: B.E., B.Com, MBA or MCA|Tools: a practice system or free learning access|Also: module certification");
+Q2("cre","Content Creator",C,"VIA","Niche and audience research|Video, audio and editing|Platform growth and analytics|Brand deals and income planning","Publish 30 pieces in 30 days|Analyse your best three posts","YouTube Creator Academy|Meta Blueprint","Entry: no fixed degree|Tools: phone or camera, editing app, a channel or profile|Also: consistency and a clear niche");
+Q2("rea","Real Estate Professional",B,"VIA","Market knowledge and RERA basics|Sales and negotiation|Valuation basics|Customer relationships","Market study of one locality|Mock property pitch","RERA agent registration|Real estate courses","Entry: any degree, RERA registration for agents in India|Tools: CRM, listing portals|Also: a local network");
+Q2("ins","Insurance Advisor",B,"PVI","Insurance products|Needs analysis and selling|Regulations|Customer trust","Mock advisory meeting|Product comparison sheet","IRDAI agent exam|Insurance Institute of India courses","Entry: 12th pass or degree, the IRDAI exam for agents|Tools: product brochures, CRM|Also: licence");
+Q2("cra","Clinical Research Associate",H,"VIA","Clinical trial basics (GCP)|Regulation and ethics|Documentation and monitoring|Life science knowledge","Summarise a published trial|GCP practice quiz","ICH-GCP training|Clinical research diplomas","Entry: B.Pharm, M.Pharm, life science or medical degree|Tools: GCP training, MS Office|Also: certification");
+Q2("bio","Biotech / Pharma R&D Scientist",E,"PVIA","Molecular biology and chemistry|Lab techniques|Data and statistics|Scientific writing","Lab project with a report|Literature review","GATE Life Sciences|CSIR NET","Entry: M.Sc, M.Pharm or PhD|Tools: lab access, Excel or R|Also: publications");
+Q2("lab","Medical Lab / Radiology Technologist",H,"PVIA","Lab techniques|Imaging basics|Quality and safety|Patient handling","Practice sample handling|Safety checklist","DMLT, BMLT or radiology diploma|State paramedical council registration","Entry: DMLT, BMLT, B.Sc MLT or a radiology diploma|Tools: lab practice, safety gear|Also: council registration");
+Q2("hca","Hospital Administrator",H,"PVIA","Healthcare systems|Finance and operations|Quality and accreditation (NABH)|People management","Study one hospital’s workflow|Draft a quality checklist","MHA or MBA Hospital Management|NABH awareness courses","Entry: a degree plus MHA or MBA in hospital management|Tools: Excel, hospital software|Also: internships");
+Q2("trn","Translator / Interpreter",C,"PVIA","Two or more languages|Subject expertise|Translation tools|Ethics and quality","Translate a 1,000-word document|Interpret a mock meeting","DELF, Goethe or JLPT certificates|Translation diplomas","Entry: language degree or proof of fluency|Tools: translation tools, glossaries|Also: language certificates");
+Q2("cvl","Civil Engineer",T,"PVIA","Structures and geotechnics|Surveying and CAD|Estimation and costing|Site management","Design a small structure|Estimate a building’s cost","GATE Civil|STAAD or Revit courses","Entry: B.E. or B.Tech in Civil|Tools: AutoCAD, STAAD, Revit|Also: licences where required");
+Q2("usm","Doctor Abroad (USMLE / PLAB)",H,"PVA","Licensing exam preparation|Clinical knowledge|Language and communication|Visa and registration process","Daily question-bank practice|Clinical electives abroad","USMLE|PLAB (UK)","Entry: MBBS plus the licensing exams of the target country|Tools: question banks, official guides|Also: licensing and visa rules differ by country");
+Q2("nab","Nurse Abroad (NCLEX / OET)",H,"PVA","Licensing exam preparation|English test (OET or IELTS)|Clinical experience|Registration and visa process","Practice exam questions daily|Document your clinical hours","NCLEX-RN|OET or IELTS","Entry: nursing degree plus the target country’s licence exam|Tools: practice question banks, English test preparation|Also: registration and visa steps");
+Q2("itr","International School Teacher",E,"VA","Subject mastery|IB or Cambridge curriculum|Classroom management|Teaching qualification (PGCE or similar)","Record a demo lesson|Plan a unit in the IB format","PGCE or equivalent|IB teacher training","Entry: degree plus a teaching qualification|Tools: lesson plans and a teaching portfolio|Also: visa and background checks");
+Q2("sfr","Merchant Navy Officer",S,"VA","Maritime subjects|Seamanship and safety (STCW)|Physical and medical fitness|Entrance exam and sponsorship","STCW basic training|Fitness plan","IMU-CET|STCW courses","Entry: DNS, B.Sc Nautical Science or B.Tech Marine, via IMU-CET or company selection|Tools: STCW courses|Also: medical fitness and CDC");
+Q2("crw","Cabin Crew",S,"VIA","Customer service and grooming|Safety and first aid|Language skills|Interview preparation","Mock airline interview|First-aid course","First-aid and CPR|Airline cabin crew training","Entry: 12th pass, airline height and fitness standards|Tools: grooming, fluent English|Also: check each airline’s notice");
+Q2("skl","Skilled Trades (Welder, Plumber, Mechanic)",S,"PVIA","Trade skills|Safety and tools|Reading drawings|Certification and trade tests","Complete a practice project|Safety checklist","ITI trade certificate|NSDC skill certification","Entry: ITI or a trade course|Tools: trade tools, safety gear|Also: trade tests and certificates, which jobs abroad often require");
+
+var cur=null,lv={},KEY="csg_v2";
+var $=function(i){return document.getElementById(i)};
+var fsel=$("field");
+Object.keys(FIELDS).forEach(function(f){var o=document.createElement("option");o.textContent=f;fsel.appendChild(o)});
+var rd=$("roles");
+var cats={};Object.keys(R).forEach(function(k){(cats[R[k].c]=cats[R[k].c]||[]).push(k)});
+Object.keys(cats).forEach(function(c){var hd=document.createElement("h3");hd.textContent=c;hd.style.cssText="grid-column:1/-1;font-size:15px;margin:10px 0 0;color:var(--mute)";rd.appendChild(hd);cats[c].forEach(function(k){var b=document.createElement("button");b.className="role";b.setAttribute("aria-pressed","false");b.innerHTML="<b>"+R[k].n+"</b><span>"+R[k].d+"</span>";b.onclick=function(){pick(k)};b.dataset.k=k;rd.appendChild(b)})});
+
+function pick(k){
+ if(k==="custom"&&!cf){$("cust").classList.remove("hide");[].forEach.call(rd.querySelectorAll(".role"),function(b){b.setAttribute("aria-pressed",b.dataset.k==="custom")});return}
+ if(k!=="custom")$("cust").classList.add("hide");
+ cur=k;lv={};
+ [].forEach.call(rd.children,function(b){b.setAttribute("aria-pressed",b.dataset.k===k)});
+ var box=$("skills");box.innerHTML="";
+ R[k].sk.forEach(function(s,i){
+  lv[i]=0;
+  var row=document.createElement("div");row.className="sk";
+  row.innerHTML="<div><b>"+s[0]+"</b><small>"+s[3]+"</small></div>";
+  var seg=document.createElement("div");seg.className="seg";
+  ["None","Basic","Good"].forEach(function(t,j){var b=document.createElement("button");b.textContent=t;b.setAttribute("aria-pressed",j===0);
+   b.onclick=function(){lv[i]=j;[].forEach.call(seg.children,function(x,n){x.setAttribute("aria-pressed",n===j)})};seg.appendChild(b)});
+  row.appendChild(seg);box.appendChild(row)});
+ $("assess").classList.remove("hide");$("out").classList.add("hide");
+ $("assess").scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+[].forEach.call(rd.querySelectorAll(".role"),function(b){var k=b.dataset.k;if(k==="custom")return;var t=TAG[k]||"PVIA",s=t.indexOf("P")>-1&&t.indexOf("V")>-1?"Public + Private":t.indexOf("P")>-1?"Public":"Private",r=t.indexOf("I")>-1&&t.indexOf("A")>-1?"India + Abroad":t.indexOf("I")>-1?"India":"Abroad";b.insertAdjacentHTML("beforeend",'<span style="display:block;margin-top:6px"><span class="tag">'+s+'</span><span class="tag">'+r+'</span></span>')});
+
+function flt(){var v=$("q").value.toLowerCase(),fs=$("fs").value,fr=$("fr").value,hd=null,n=0;[].slice.call(rd.children).concat([null]).forEach(function(el){if(!el||el.tagName==="H3"){if(hd)hd.classList.toggle("hide",!n);hd=el;n=0}else{var k=el.dataset.k,t=TAG[k]||"PVIA",m=k==="custom"||((!v||(el.children[0].textContent+" "+el.children[1].textContent).toLowerCase().indexOf(v)>-1)&&(!fs||t.indexOf(fs)>-1)&&(!fr||t.indexOf(fr)>-1));el.classList.toggle("hide",!m);if(m)n++}})}
+$("q").oninput=flt;$("fs").onchange=flt;$("fr").onchange=flt;
+
+$("cu").onclick=function(){
+ var ls=$("cs").value.split("\n").map(function(x){return x.trim()}).filter(Boolean).slice(0,10);
+ if(ls.length<2){$("cs").focus();return}
+ R.custom={n:$("ct").value.trim()||"Your profession",d:"",c:"Not listed?",sk:ls.map(function(x,i){return[x,12-Math.min(i,4),30,"A skill you listed"]}),pr:["Build one real piece of work that shows these skills","Ask a professional in this field for feedback"],ce:["Search for the official exam, licence or course for this profession"]};
+ cf=1;pick("custom");cf=0;
+};
+
+// AI Custom Profession Generation via Backend
+$("aiBtn").onclick=async function(){
+ var ct = $("ct").value.trim();
+ if(!ct){ alert("Please enter your profession title first."); $("ct").focus(); return; }
+ $("aiBtn").textContent = "✨ Generating with AI...";
+ $("aiBtn").disabled = true;
+
+ if(isApiLive){
+   try {
+     var res = await fetch(API_URL + "/api/ai/custom-role", {
+       method: "POST",
+       headers: {"Content-Type":"application/json"},
+       body: JSON.stringify({profession_name: ct, key_skills_text: $("cs").value.trim()})
+     });
+     if(res.ok){
+       var data = await res.json();
+       R[data.id] = {
+         n: data.name, d: data.description, c: data.category,
+         sk: data.skills, pr: data.projects, ce: data.certificates
+       };
+       if(data.needs) NEED[data.id] = data.needs.join("|");
+       if(data.books) BK[data.id] = data.books.join("|");
+       cf=1; pick(data.id); cf=0;
+       $("aiBtn").textContent = "✨ Generate with AI";
+       $("aiBtn").disabled = false;
+       return;
+     }
+   }catch(e){ console.warn("Backend AI generation failed, using local fallback:", e); }
+ }
+
+ // Fallback local generation
+ var ls=$("cs").value.split("\n").map(function(x){return x.trim()}).filter(Boolean);
+ if(!ls.length) ls = [ct + " Foundations", "Tools & Methodologies", "Applied Problem Solving", "Quality Standards", "Portfolio Deliverable"];
+ R.custom = {
+   n: ct, d: "AI-structured custom syllabus", c: "Specialized Careers",
+   sk: ls.map(function(x,i){return[x, 12-Math.min(i,4), 25+(i%3)*10, "Core competency for "+ct]}),
+   pr: ["Complete an end-to-end "+ct+" capstone case study", "Ask an industry mentor for peer evaluation"],
+   ce: ["Search official certification or licensing for "+ct]
+ };
+ cf=1; pick("custom"); cf=0;
+ $("aiBtn").textContent = "✨ Generate with AI";
+ $("aiBtn").disabled = false;
+};
+
+$("go").onclick=function(){
+ if(!cur)return;
+ var role=R[cur],hrs=Math.max(2,+$("hrs").value||10),tot=0,got=0,gaps=[],lv0={};for(var z in lv)lv0[z]=lv[z];
+ role.sk.forEach(function(s,i){tot+=s[1];got+=s[1]*lv[i]/2;if(lv[i]<2)gaps.push({i:i,s:s,l:lv[i]})});
+ var score=Math.round(got/tot*100);
+ var steps=gaps.map(function(g){var h=Math.round(g.s[2]*(g.l===1?0.5:1));return{id:cur+"_"+g.i,t:g.s[0],h:h,note:g.s[3],l:g.l}});
+ var totalH=steps.reduce(function(a,s){return a+s.h},0),weeks=Math.ceil(totalH/hrs);
+ var saved={};try{saved=JSON.parse(localStorage.getItem(KEY)||"{}")}catch(e){}
+ var name=$("name").value.trim(),fld=fsel.value;
+
+ var h='<div class="card"><h2>'+(name?name+", your":"Your")+' readiness for '+role.n+'</h2><div class="score"><div class="big" id="sc">'+score+'%</div><div style="flex:1"><div class="bar"><i id="sb" style="width:'+score+'%"></i></div><p class="sub" id="sm" style="margin:8px 0 0">'+(score>=70?"You are close. Polish the gaps and start applying.":score>=35?"Good base. Work through the roadmap in order.":"You are at the start, and that is fine. The roadmap below starts from the basics.")+'</p></div></div></div>';
+ h+='<div class="card"><h2>Your starting advantage</h2><p style="margin:0">'+FIELDS[fld]+'</p></div>';
+ h+='<div class="card" id="gcard"><h2>Skill gaps</h2>';
+ if(!gaps.length)h+='<p class="good">No gaps found. Move on to projects and interviews.</p>';
+ else gaps.slice().sort(function(a,b){return b.s[1]*(2-b.l)-a.s[1]*(2-a.l)}).slice(0,5).forEach(function(g){h+='<div class="sk"><span><b>'+g.s[0]+'</b></span><span class="gap">'+(g.l?"Needs strengthening":"Not started")+'</span></div>'});
+ h+='<p class="sub" style="margin:8px 0 0">Showing the 5 biggest gaps by importance.</p></div>';
+ h+='<div class="card"><h2>Your roadmap</h2><p class="sub" style="margin-bottom:6px">About '+totalH+' hours in total. At '+hrs+' hours a week, that is around '+weeks+' weeks. Tick each step when you finish it.</p><p id="pt" style="margin:0;font-weight:600"></p><div class="bar" style="margin:8px 0 16px"><i id="pb" style="width:0"></i></div><div class="trail" id="trail">';
+ var cum=0;
+ steps.forEach(function(s){var a=Math.ceil(cum/hrs)+1;cum+=s.h;var b=Math.ceil(cum/hrs);
+  h+='<div class="step" data-id="'+s.id+'"><label><input type="checkbox" '+(saved[s.id]?"checked":"")+'><span class="t"><b>'+s.t+'</b> <span class="tag">'+(a===b?"Week "+a:"Weeks "+a+"–"+b)+'</span></span></label><p>'+s.note+' · about '+s.h+' hours</p></div>'});
+ if(!steps.length)h+='<p class="good">Nothing left to learn from this list.</p>';
+ h+='</div></div>';
+ h+='<div class="grid"><div class="card"><h2>Projects to build</h2><ul>'+role.pr.map(function(p){return"<li>"+p+"</li>"}).join("")+'</ul></div><div class="card"><h2>Certificates and courses</h2><ul>'+role.ce.map(function(p){return"<li>"+p+"</li>"}).join("")+'</ul></div></div>';
+ var nd=(NEED[cur]||"Entry: check the official requirement for this profession|Tools: ask a working professional which tools they use every day|Also: a portfolio or proof of your work").split("|");
+ h+='<div class="card"><h2>What you will need</h2><ul>'+nd.map(function(x){var p=x.split(": ");return'<li><b>'+p[0]+':</b> '+p.slice(1).join(": ")+'</li>'}).join('')+'</ul><p class="sub" style="margin:8px 0 0">Rules, fees and eligibility change. Confirm with the official college, council or exam website before you plan.</p></div>';
+ var fl=(FREE[role.c]||[]).concat(FREE.all);
+ h+='<div class="card"><h2>Free online learning</h2><ul>'+fl.map(function(x){return'<li>'+lk(x[1],x[0])+': '+x[2]+'</li>'}).join('')+'</ul></div>';
+ var bt=(BK[cur]||"").split("|").filter(Boolean),qn=enc(role.n);
+ h+='<div class="card"><h2>Books to read</h2><ul>'+bt.map(function(t){return'<li>'+t+': '+lk('https://openlibrary.org/search?q='+enc(t),'Open Library')+' · '+lk('https://www.google.com/search?tbm=bks&q='+enc(t),'Google Books')+'</li>'}).join('')+'<li>More on this career: '+lk('https://openlibrary.org/search?q='+qn,'Open Library search')+'</li><li>Free courses: '+lk('https://nptel.ac.in','NPTEL')+' · '+lk('https://swayam.gov.in','SWAYAM')+' · '+lk('https://www.coursera.org/search?query='+qn,'Coursera')+'</li></ul></div>';
+ h+='<div class="card"><h2>Find a mentor</h2><ul><li>'+lk('https://www.linkedin.com/search/results/people/?keywords='+qn,'LinkedIn: people working as '+role.n)+'. Filter by your college or city.</li><li>'+lk('https://adplist.org','ADPList')+': free mentorship sessions, strongest for tech, design and product.</li><li>'+lk('https://mentorcruise.com','MentorCruise')+': paid long-term mentors in many fields.</li><li>'+lk('https://topmate.io','Topmate')+': book 1:1 calls with working professionals.</li><li>Your college alumni network, seniors and faculty are often the quickest first step.</li></ul><p class="sub" style="margin:8px 0 0">A short message works best: who you are, your target role, one specific question, and a 15-minute ask.</p></div>';
+
+ // AI Mentor Chat Card
+ h+='<div class="card"><h2>🤖 Ask AI Career Mentor</h2><p class="sub" style="margin-bottom:8px">Get immediate advice on study strategies, book choices, or exam prep for '+role.n+':</p><div style="display:flex;gap:10px;"><input type="text" id="mentorQ" placeholder="e.g. How should I split '+hrs+' hours weekly between theory and problem solving?"><button class="cta" id="askMentorBtn" style="white-space:nowrap;padding:10px 16px;">Ask Mentor</button></div><div id="mentorAns" class="hide" style="margin-top:12px;background:var(--bg);border-left:4px solid var(--acc);padding:12px;border-radius:8px;font-size:14px;line-height:1.6"></div></div>';
+
+ h+='<div class="card" id="ncard"><h2>Next action</h2><p style="margin:0">'+(steps[0]?"Start with <b>"+steps[0].t+"</b> this week. Spend "+Math.min(hrs,steps[0].h)+" hours on it.":"Build your first project and share it publicly.")+'</p></div>';
+ 
+ var out=$("out");out.innerHTML=h;out.classList.remove("hide");
+
+ $("askMentorBtn").onclick = async function(){
+   var q = $("mentorQ").value.trim();
+   if(!q) return;
+   var box = $("mentorAns");
+   box.classList.remove("hide");
+   box.innerHTML = "<em>Consulting Career AI Mentor...</em>";
+
+   if(isApiLive){
+     try {
+       var res = await fetch(API_URL + "/api/ai/ask-mentor", {
+         method: "POST",
+         headers: {"Content-Type":"application/json"},
+         body: JSON.stringify({
+           question: q,
+           role_name: role.n,
+           readiness_score: score,
+           top_gaps: gaps.slice(0, 3).map(function(g){ return g.s[0]; }),
+           hours_per_week: hrs
+         })
+       });
+       if(res.ok){
+         var d = await res.json();
+         box.innerHTML = "<b>Mentor:</b> " + d.answer.replace(/\n/g, "<br>");
+         return;
+       }
+     }catch(e){}
+   }
+
+   // Local Mentor Guidance Fallback
+   var topG = gaps.length ? gaps[0].s[0] : "portfolio projects";
+   box.innerHTML = "<b>Mentor:</b> For <b>" + role.n + "</b> with <b>" + hrs + " hrs/week</b>:<br><br>" +
+     "1. Focus first on your biggest gap: <b>" + topG + "</b>.<br>" +
+     "2. Split your time into 60% concept mastery, 30% hands-on tasks, and 10% active recall.<br>" +
+     "3. Consistency over intensity: 2 hours every weekday beats a chaotic weekend rush.";
+ };
+
+ function refresh(d,n,p){var t2=0,g2=0,gp=[];role.sk.forEach(function(s,i){var e=saved[cur+"_"+i]?2:lv0[i];t2+=s[1];g2+=s[1]*e/2;if(e<2)gp.push({s:s,e:e})});var sc=Math.round(g2/t2*100);$("sc").textContent=sc+"%";$("sb").style.width=sc+"%";$("sm").textContent=sc>=100?"Fully ready. Start applying!":sc>=70?"You are close. Polish the gaps and start applying.":sc>=35?"Good base. Work through the roadmap in order.":"You are at the start, and that is fine. The roadmap below starts from the basics.";$("pt").textContent=n?d+" of "+n+" skills completed ("+p+"%)"+(d===n?". All done, you are ready to apply!":""):"No gaps to complete. Build projects next.";var g='<h2>Skill gaps</h2>';if(!gp.length)g+='<p class="good">No gaps left. Move on to projects and interviews.</p>';else{gp.sort(function(a,b){return b.s[1]*(2-b.e)-a.s[1]*(2-a.e)}).slice(0,5).forEach(function(x){g+='<div class="sk"><span><b>'+x.s[0]+'</b></span><span class="gap">'+(x.e?"Needs strengthening":"Not started")+'</span></div>'});g+='<p class="sub" style="margin:8px 0 0">The biggest gaps. This list updates as you complete skills.</p>'}$("gcard").innerHTML=g;var nx=steps.filter(function(s){return !saved[s.id]})[0];$("ncard").innerHTML='<h2>Next action</h2><p style="margin:0">'+(nx?"Start with <b>"+nx.t+"</b> this week. Spend "+Math.min(hrs,nx.h)+" hours on it.":"You have completed every step. Build a project and share it publicly.")+'</p>'}
+ function upd(){var c=out.querySelectorAll(".step"),d=0;[].forEach.call(c,function(el){var on=el.querySelector("input").checked;el.classList.toggle("done",on);if(on)d++});var p=c.length?Math.round(d/c.length*100):100;$("pb").style.width=p+"%";refresh(d,c.length,p)}
+ [].forEach.call(out.querySelectorAll(".step"),function(el){el.querySelector("input").onchange=function(e){
+   saved[el.dataset.id]=e.target.checked;
+   try{localStorage.setItem(KEY,JSON.stringify(saved))}catch(x){}
+   if(isApiLive){
+     fetch(API_URL + "/api/progress/save", {
+       method: "POST",
+       headers: {"Content-Type":"application/json"},
+       body: JSON.stringify({
+         student_name: name || "Aspirant",
+         role_id: cur,
+         completed_step_ids: Object.keys(saved).filter(function(k){return saved[k]}),
+         hours_per_week: hrs
+       })
+     }).catch(function(){});
+   }
+   upd();
+ }});
+ upd();out.scrollIntoView({behavior:"smooth",block:"start"});
+};
+
+$("theme").onclick=function(){var r=document.documentElement,d=r.getAttribute("data-theme")==="dark"||(!r.getAttribute("data-theme")&&matchMedia("(prefers-color-scheme: dark)").matches);r.setAttribute("data-theme",d?"light":"dark")};
+
+// Initialize
+window.onload = function(){
+  testBackend();
+};
+</script>
+</body>
+</html>
