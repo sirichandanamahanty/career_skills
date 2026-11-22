@@ -129,7 +129,7 @@ section.card:nth-of-type(1){--ac:#8b5cf6}section.card:nth-of-type(2){--ac:#ec489
 <section id="out" class="hide" aria-live="polite"></section>
 </main>
 <script>
-var API_URL = "http://127.0.0.1:8000";
+var API_URL = (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") ? "http://127.0.0.1:8000" : window.location.origin;
 var isApiLive = false;
 
 async function testBackend(){
